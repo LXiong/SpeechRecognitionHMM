@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.db;
 
 import java.io.File;
@@ -12,32 +5,17 @@ import java.io.File;
 import org.ioe.tprsa.classify.speech.CodeBookDictionary;
 import org.ioe.tprsa.classify.speech.HMMModel;
 
-
-/**
- * 
- * @author Ganesh Tiwari
- * 
- */
 public class ObjectIODataBase implements DataBase {
-
     /**
      * type of current model,,gmm,hmm,cbk, which is extension ofsaved file
      */
     String type;
-    /**
-     *
-     */
     String[] modelFiles;
-    /**
-     *
-     */
-    String[] userNames;
     String CURRENTFOLDER;
     /**
      * the file name to same codebook, adds .cbk extension automatically
      */
     String CODEBOOKFILENAME = "codebook";
-    String currentModelType;
 
     /**
      * MAKE SURE THAT Files are/will be in this folder structure
@@ -54,11 +32,9 @@ public class ObjectIODataBase implements DataBase {
      * \models\\GMM\\ram.gmm
      * \models\\GMM\\shyam.gmm
      */
-    public ObjectIODataBase() {
-    }
+    public ObjectIODataBase() {}
 
     /**
-     *
      * @param type type of the model, valid entry are either gmm, hmm, or cbk
      */
     public void setType(String type) {
@@ -71,9 +47,6 @@ public class ObjectIODataBase implements DataBase {
         }
     }
 
-    /**
-     *
-     */
     @Override
     public Model readModel(String name) {
         Model model = null;
@@ -94,23 +67,15 @@ public class ObjectIODataBase implements DataBase {
         return model;
     }
 
-    /**
-     *
-     */
     @Override
     public String[] readRegistered() {
-
         modelFiles = readRegisteredWithExtension();
         System.out.println("modelFiles length (Oiodb) :" + modelFiles.length);
         return removeExtension(modelFiles);
     }
 
-    /**
-     *
-     */
     @Override
     public void saveModel(Model model, String name) {
-
         if (type.equalsIgnoreCase("hmm")) {
             ObjectIO<HMMModel> oio = new ObjectIO<HMMModel>();
             oio.setModel((HMMModel) model);
@@ -123,7 +88,6 @@ public class ObjectIODataBase implements DataBase {
             oio.saveModel( CURRENTFOLDER + "\\"
                     + CODEBOOKFILENAME + "." + type);
         }
-
     }
 
     private String[] readRegisteredWithExtension() {

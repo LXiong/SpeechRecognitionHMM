@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.ui;
 
 import java.awt.Dimension;
@@ -35,7 +28,6 @@ import org.ioe.tprsa.db.DataBase;
 import org.ioe.tprsa.db.ObjectIODataBase;
 import org.ioe.tprsa.db.TrainingTestingWaveFiles;
 import org.ioe.tprsa.mediator.Operations;
-import org.ioe.tprsa.util.ErrorManager;
 
 /**
  * Main application- contains GUI and main method - train / test / data
@@ -65,7 +57,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	private JLabel statusLBLRecognize;
 	private JTextField addWordToCombo = null;
 	private JButton addWordToComboBtn = null;
-	private JButton addTrainSampleBtn = null;
 	private JLabel lblChooseAWord;
 	private JLabel lblAddANew;
 
@@ -78,13 +69,10 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 	public HMM_VQ_Speech_Recognition() {
 		super();
 		initialize();
-		ErrorManager.setMessageLbl(getStatusLblRecognize());
 	}
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setSize(485, 335);
@@ -257,11 +245,10 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			wordsComboBoxVerify = new JComboBox();
 			try {
 				String[] regs = db.readRegistered();
-				for (int i = 0; i < regs.length; i++) {
-					wordsComboBoxVerify.addItem(regs[i]);
-				}
-			} catch (Exception e) {
-			}
+                for (String reg : regs) {
+                    wordsComboBoxVerify.addItem(reg);
+                }
+			} catch (Exception ignored) {}
 			wordsComboBoxVerify.setBounds(new Rectangle(13, 75, 202, 24));
 		}
 		return wordsComboBoxVerify;
@@ -273,11 +260,10 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 			wordsComboBoxAddWord = new JComboBox();
 			try {
 				String[] regs = ttwf.readWordWavFolder();
-				for (int i = 0; i < regs.length; i++) {
-					wordsComboBoxAddWord.addItem(regs[i]);
-				}
-			} catch (Exception e) {
-			}
+                for (String reg : regs) {
+                    wordsComboBoxAddWord.addItem(reg);
+                }
+			} catch (Exception ignored) {}
 			wordsComboBoxAddWord.setBounds(new Rectangle(11, 103, 202, 24));
 			wordsComboBoxAddWord.addItemListener(new ItemListener() {
 
@@ -293,7 +279,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 
 	/**
 	 * This method initializes getWordButton1
-	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getGetWordButton1() {
@@ -313,7 +298,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -356,7 +340,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 
 	/**
 	 * This method initializes addWordToCombo
-	 * 
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getAddWordToCombo() {
@@ -401,37 +384,6 @@ public class HMM_VQ_Speech_Recognition extends JFrame {
 		return addWordToComboBtn;
 	}
 
-	/**
-	 * This method initializes addTrainSample
-	 * 
-	 * @return javax.swing.JButton
-	 */
-	private JButton getAddTrainSampleBtn() {
-		if (addTrainSampleBtn == null) {
-			addTrainSampleBtn = new JButton("Record");
-			addTrainSampleBtn.setBounds(new Rectangle(223, 103, 141, 24));
-			addTrainSampleBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (addTrainSampleBtn.getText().startsWith("Record")) {
-						soundCapture.startRecord();
-						addTrainSampleBtn.setText("Save Captured");
-					}
-					else if (addTrainSampleBtn.getText().startsWith("Save")) {
-						// TODO: decouple path, may be singleton conf for path
-						soundCapture.setSaveFileName("TrainWav\\" + getWordsComboBoxAddWord().getSelectedItem() + "\\"
-								+ getWordsComboBoxAddWord().getSelectedItem());
-						soundCapture.getFileNameAndSaveFile();
-						addTrainSampleBtn.setText("Record");
-					}
-				}
-			});
-		}
-		return addTrainSampleBtn;
-	}
-
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

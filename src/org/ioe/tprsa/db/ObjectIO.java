@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.db;
 
 import java.io.FileInputStream;
@@ -17,10 +10,6 @@ import java.io.ObjectOutputStream;
 /**
  * This Class works for both any object <code><T></code>, which implements the
  * Model interface
- * 
- * @author Ganesh Tiwari
- * 
- * @param <T>
  */
 public class ObjectIO<T> {
 
@@ -31,14 +20,11 @@ public class ObjectIO<T> {
 	/**
 	 * default constructor of modelDB
 	 */
-	public ObjectIO() {
-	}
+	public ObjectIO() {}
 
 	/**
 	 * sets the model to save to db
-	 * 
-	 * @param model
-	 *            model of current type to save into db
+	 * @param model model of current type to save into db
 	 */
 	public void setModel(T model) {
 		this.model = model;
@@ -46,8 +32,6 @@ public class ObjectIO<T> {
 
 	/**
 	 * saves the model to {@code filePath} of type T
-	 * 
-	 * @param filePath
 	 */
 	public void saveModel(String filePath) {
 		// open file
@@ -71,7 +55,6 @@ public class ObjectIO<T> {
 	/**
 	 * read the model from {@code filePath} of type T
 	 * 
-	 * @param filePath
 	 * @return the model of type T
 	 */
 	public T readModel(String filePath) {

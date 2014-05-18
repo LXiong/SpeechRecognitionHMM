@@ -35,12 +35,7 @@ public class TrainingTestingWaveFiles {
 	 * \codeBook\\codeBook.cbk 
 	 * \models\\HMM\\apple.hmm \models\\HMM\\cat.hmm
 	 * 
-	 */
-	/**
 	 * constructor, sets the wavFile path according to the args supplied
-	 * 
-	 * @param hmmOrGmm
-	 * @param testOrTrain
 	 */
 	public TrainingTestingWaveFiles(String testOrTrain) {
 		if (testOrTrain.equalsIgnoreCase("test")) {
@@ -71,12 +66,12 @@ public class TrainingTestingWaveFiles {
 			waveFiles[i] = wordDir.listFiles();
 		}
 		System.out.println("++++++Folder's Content+++++");
-		for (int i = 0; i < waveFiles.length; i++) {
-			for (int j = 0; j < waveFiles[i].length; j++) {
-				System.out.print(waveFiles[i][j].getName() + "\t\t");
-			}
-			System.out.println();
-		}
+        for (File[] waveFile : waveFiles) {
+            for (File aWaveFile : waveFile) {
+                System.out.print(aWaveFile.getName() + "\t\t");
+            }
+            System.out.println();
+        }
 		return waveFiles;
 
 	}

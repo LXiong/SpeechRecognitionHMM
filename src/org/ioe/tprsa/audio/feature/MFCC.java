@@ -1,17 +1,5 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.audio.feature;
 
-/**
- * 
- * @author Ganesh Tiwari
- * 
- */
 public class MFCC {
 
 	private int numMelFilters = 30;// how much
@@ -51,17 +39,17 @@ public class MFCC {
 		// magnitudeSpectrum and bin filter indices
 
 		// System.out.println("after mel filter");
-		// ArrayWriter.printDoubleArrayToConole(fbank);
+		// ArrayWriter.printDoubleArrayToConsole(fbank);
 
 		// Non-linear transformation
 		double f[] = nonLinearTransformation(fbank);
 		// System.out.println("after N L T");
-		// ArrayWriter.printDoubleArrayToConole(f);
+		// ArrayWriter.printDoubleArrayToConsole(f);
 		
 		// Cepstral coefficients, by DCT
 		double cepc[] = dct.performDCT(f);
 		// System.out.println("after DCT");
-		// ArrayWriter.printDoubleArrayToConole(cepc);
+		// ArrayWriter.printDoubleArrayToConsole(cepc);
 		return cepc;
 	}
 

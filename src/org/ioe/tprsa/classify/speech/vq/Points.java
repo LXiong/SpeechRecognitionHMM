@@ -82,17 +82,6 @@ public class Points implements Serializable {
 	}
 
 	/**
-	 * get all the coordinates<br>
-	 * calls: none<br>
-	 * called by: codebook
-	 * 
-	 * @return coordinates as a double array
-	 */
-	public double[] getAllCo() {
-		return coordinates;
-	}
-
-	/**
 	 * get coordinate at specific index<br>
 	 * calls: none<br>
 	 * called by: centroid, codebook
@@ -117,18 +106,6 @@ public class Points implements Serializable {
 	 */
 	public void setCo(int i, double value) {
 		coordinates[i] = value;
-	}
-
-	/**
-	 * replace coordinates with new ones<br>
-	 * calls: none<br>
-	 * called by: centroid, codebook
-	 * 
-	 * @param tCo
-	 *            new coordinates array
-	 */
-	public void changeCo(double tCo[]) {
-		coordinates = tCo;
 	}
 
 	/**

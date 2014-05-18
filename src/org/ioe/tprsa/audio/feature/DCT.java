@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.audio.feature;
 
 /**
@@ -25,11 +18,8 @@ public class DCT {
 	int M;
 
 	/**
-	 * @param len
-	 *            length of array, i.e., number of features
-	 * @param M
-	 *            numbe of Mel Filters
-	 * @return
+	 * @param len length of array, i.e., number of features
+	 * @param M numbe of Mel Filters
 	 */
 	public DCT(int numCepstra, int M) {
 		this.numCepstra = numCepstra;

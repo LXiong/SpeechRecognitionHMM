@@ -1,47 +1,3 @@
-/*
-OC Volume - Java Speech Recognition Engine
-Copyright (c) 2002-2004, OrangeCow organization
-All rights reserved.
-
-Redistribution and use in source and binary forms,
-with or without modification, are permitted provided
-that the following conditions are met:
-
- * Redistributions of source code must retain the
-  above copyright notice, this list of conditions
-  and the following disclaimer.
- * Redistributions in binary form must reproduce the
-  above copyright notice, this list of conditions
-  and the following disclaimer in the documentation
-  and/or other materials provided with the
-  distribution.
- * Neither the name of the OrangeCow organization
-  nor the names of its contributors may be used to
-  endorse or promote products derived from this
-  software without specific prior written
-  permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
-AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
-OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-Contact information:
-Please visit http://ocvolume.sourceforge.net.
- */
-
 package org.ioe.tprsa.classify.speech;
 
 import org.ioe.tprsa.db.DataBase;
@@ -154,7 +110,6 @@ public class HiddenMarkov {
 			if (temp == 0) {
 				temp = MIN_PROBABILITY;
 			}
-
 			phi[0][i] = Math.log(temp) + Math.log(output[i][currentSeq[0]]);
 			psi[0][i] = 0;
 		}
@@ -166,15 +121,12 @@ public class HiddenMarkov {
 				int index = 0;
 
 				for (int i = 1; i < num_states; i++) {
-
 					temp = phi[t - 1][i] + Math.log(transition[i][j]);
 					if (temp > max) {
 						max = temp;
 						index = i;
 					}
-
 				}
-
 				phi[t][j] = max + Math.log(output[j][currentSeq[t]]);
 				psi[t][j] = index;
 			}
@@ -185,7 +137,6 @@ public class HiddenMarkov {
 		int index = 0;
 		for (int i = 1; i < num_states; i++) {
 			temp = phi[len_obSeq - 1][i];
-
 			if (temp > max) {
 				max = temp;
 				index = i;
@@ -193,11 +144,9 @@ public class HiddenMarkov {
 		}
 
 		q[len_obSeq - 1] = index;
-
 		for (int t = len_obSeq - 2; t >= 0; t--) {
 			q[t] = psi[t + 1][q[t + 1]];
 		}
-
 		return max;
 	}
 
@@ -235,22 +184,6 @@ public class HiddenMarkov {
 		for (int i = 0; i < num_states; i++) {
 			alpha[t][i] *= scaleFactor[t];
 		}
-	}
-
-	/**
-	 * returns the probability calculated from the testing sequence<br>
-	 * calls: none<br>
-	 * called by: volume
-	 * 
-	 * @param testSeq
-	 *            testing sequence
-	 * @return probability of observation sequence given the model
-	 */
-	public double getProbability(int testSeq[]) {
-		setObSeq(testSeq);
-		double temp = computeAlpha();
-
-		return temp;
 	}
 
 	/**
@@ -355,33 +288,6 @@ public class HiddenMarkov {
 	}
 
 	/**
-	 * set the number of training sequences<br>
-	 * calls: none<br>
-	 * called by: trainHMM
-	 * 
-	 * @param k
-	 *            number of training sequences
-	 */
-	public void setNumObSeq(int k) {
-		num_obSeq = k;
-		obSeq = new int[k][];
-	}
-
-	/**
-	 * set a training sequence for re-estimation step<br>
-	 * calls: none<br>
-	 * called by: trainHMM
-	 * 
-	 * @param k
-	 *            index representing kth training sequence
-	 * @param trainSeq
-	 *            training sequence
-	 */
-	public void setTrainSeq(int k, int trainSeq[]) {
-		obSeq[k] = trainSeq;
-	}
-
-	/**
 	 * set training sequences for re-estimation step<br>
 	 * calls: none<br>
 	 * called by: trainHMM
@@ -393,9 +299,7 @@ public class HiddenMarkov {
 		num_obSeq = trainSeq.length;
 		obSeq = new int[num_obSeq][];// /ADDED
 		// System.out.println("num obSeq << setTrainSeq()    "+num_obSeq);
-		for (int k = 0; k < num_obSeq; k++) {
-			obSeq[k] = trainSeq[k];
-		}
+        System.arraycopy(trainSeq, 0, obSeq, 0, num_obSeq);
 	}
 
 	/**
@@ -410,8 +314,6 @@ public class HiddenMarkov {
 			reestimate();
 			System.out.println("reestimating.....");
 		}
-		//
-		// oldm=
 	}
 
 	/**
@@ -527,7 +429,7 @@ public class HiddenMarkov {
 		HMMModel model = new HMMModel();
 		model = (HMMModel) db.readModel(word);// System.out.println(model.getClass());
 		num_obSeq = model.getNum_obSeq();
-		output = model.getOutput();// ArrayWriter.print2DTabbedDoubleArrayToConole(output);
+		output = model.getOutput();// ArrayWriter.print2DTabbedDoubleArrayToConsole(output);
 		transition = model.getTransition();
 		pi = model.getPi();
 		num_states = output.length;
@@ -606,11 +508,11 @@ public class HiddenMarkov {
 		db.setType("hmm");
 		HMMModel model = new HMMModel();
 		model.setOutput(output);
-		ArrayWriter.print2DTabbedDoubleArrayToConole(output);
+		ArrayWriter.print2DTabbedDoubleArrayToConsole(output);
 		model.setPi(pi);
-		ArrayWriter.printDoubleArrayToConole(pi);
+		ArrayWriter.printDoubleArrayToConsole(pi);
 		model.setTransition(transition);
-		ArrayWriter.print2DTabbedDoubleArrayToConole(transition);
+		ArrayWriter.print2DTabbedDoubleArrayToConsole(transition);
 		db.saveModel(model, modelName);
 	}
 }

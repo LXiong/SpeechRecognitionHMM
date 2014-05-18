@@ -89,32 +89,6 @@ public class Codebook {
 	protected int dimension;
 
 	/**
-	 * constructor to train a Codebook with given training points and Codebook
-	 * size<br>
-	 * calls: none<br>
-	 * called by: trainCodebook
-	 * 
-	 * @param tmpPt
-	 *            training vectors
-	 * @param size
-	 *            Codebook size
-	 */
-	public Codebook(Points tmpPt[], int size) {
-		// update variables
-		this.pt = tmpPt;
-		this.codebook_size = size;
-
-		// make sure there are enough training points to train the Codebook
-		if (pt.length >= codebook_size) {
-			dimension = pt[0].getDimension();
-			initialize();
-		}
-		else {
-			System.out.println("err: not enough training points");
-		}
-	}
-
-	/**
 	 * constructor to train a Codebook with given training points and default
 	 * Codebook size (256)<br>
 	 * calls: none<br>
@@ -150,16 +124,6 @@ public class Codebook {
 		centroids = cbd.getCent();
 		// System.out.println("Showing parameters");
 		// showParameters();
-	}
-
-	private void showParameters() {
-		for (int c = 0; c < centroids.length; c++) {
-			// bw.write("c" + c + ": (");
-			for (int k = 0; k < dimension; k++) {
-				System.out.print(centroids[c].getCo(k) + "\t");
-			}
-			System.out.println();
-		}
 	}
 
 	/**
@@ -279,25 +243,6 @@ public class Codebook {
 			output[i] = closestCentroidToPoint(pts[i]);
 		}
 		return output;
-	}
-
-	/**
-	 * calculates the distortion<br>
-	 * calls: none<br>
-	 * called by: volume
-	 * 
-	 * @param pts
-	 *            points to calculate the distortion with
-	 * @return distortion measure
-	 */
-	public double getDistortion(Points pts[]) {
-		double dist = 0;
-		for (int i = 0; i < pts.length; i++) {
-			int index = closestCentroidToPoint(pts[i]);
-			double d = getDistance(pts[i], centroids[index]);
-			dist += d;
-		}
-		return dist;
 	}
 
 	/**

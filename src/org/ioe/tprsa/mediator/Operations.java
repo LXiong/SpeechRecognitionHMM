@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.mediator;
 
 import java.io.File;
@@ -24,10 +17,6 @@ import org.ioe.tprsa.db.ObjectIODataBase;
 import org.ioe.tprsa.db.TrainingTestingWaveFiles;
 import org.ioe.tprsa.util.ArrayWriter;
 
-/**
- * 
- * @author Ganesh Tiwari
- */
 public class Operations {
 
 	TrainingTestingWaveFiles trainTestWavs;
@@ -37,18 +26,16 @@ public class Operations {
 	int samplePerFrame = 512;// 23.22ms
 	int FEATUREDIMENSION = 39;
 	String[] words;
-	String[] users;
 	File[][] wavFiles;
 	FeatureExtract fExt;
 	WaveData wd;
 	PreProcess prp;
 	Codebook cb;
-	List<double[]> allFeaturesList = new ArrayList<double[]>();
+	List<double[]> allFeaturesList = new ArrayList<>();
 	HiddenMarkov mkv;
 	DataBase db;
-	private HiddenMarkov hmmModels[];
 
-	public Operations() {
+    public Operations() {
 		wd = new WaveData();
 	}
 
@@ -84,10 +71,6 @@ public class Operations {
 		// hmmTrain();
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	public void hmmTrain() {
 		System.out.println("inside hmm train");
 		trainTestWavs = new TrainingTestingWaveFiles("train");
@@ -129,12 +112,6 @@ public class Operations {
 		return hmmGetWordWithFeature(feature);
 	}
 
-	public String hmmGetWordFromFileByteArray(byte[] byteArray) {
-		// extract features
-		FeatureVector feature = extractFeatureFromFileByteArray(byteArray);
-		return hmmGetWordWithFeature(feature);
-	}
-
 	public String hmmGetWordFromAmplitureArray(float[] byteArray) {
 		// extract features
 		FeatureVector feature = extractFeatureFromExtractedAmplitureByteArray(byteArray);
@@ -153,8 +130,8 @@ public class Operations {
 		words = db.readRegistered();
 		db = null;
 		System.out.println("registred words ::: count : " + words.length);
-		ArrayWriter.printStringArrayToConole(words);
-		hmmModels = new HiddenMarkov[words.length];
+		ArrayWriter.printStringArrayToConsole(words);
+        HiddenMarkov[] hmmModels = new HiddenMarkov[words.length];
 
 		// read hmmModels
 		for (int i = 0; i < words.length; i++) {
@@ -179,24 +156,6 @@ public class Operations {
 		return words[wordIndex];
 	}
 
-	/**
-	 * 
-	 * @param byteArray
-	 * @return
-	 * @throws Exception
-	 */
-	public FeatureVector extractFeatureFromFileByteArray(byte[] byteArray) {
-		float[] arrAmp;
-		arrAmp = wd.extractAmplitudeFromFileByteArray(byteArray);
-		return extractFeatureFromExtractedAmplitureByteArray(arrAmp);
-	}
-
-	/**
-	 * 
-	 * @param byteArray
-	 * @return
-	 * @throws Exception
-	 */
 	public FeatureVector extractFeatureFromExtractedAmplitureByteArray(float[] arrAmp) {
 		prp = new PreProcess(arrAmp, samplePerFrame, samplingRate);
 		fExt = new FeatureExtract(prp.framedSignal, samplingRate, samplePerFrame);
@@ -204,23 +163,12 @@ public class Operations {
 		return fExt.getFeatureVector();
 	}
 
-	/**
-	 * 
-	 * @param speechFile
-	 * @return
-	 * @throws Exception
-	 */
 	private FeatureVector extractFeatureFromFile(File speechFile) {
 		float[] arrAmp;
 		arrAmp = wd.extractAmplitudeFromFile(speechFile);
 		return extractFeatureFromExtractedAmplitureByteArray(arrAmp);
 	}
 
-	/**
-	 * 
-	 * @param features
-	 * @return
-	 */
 	private Points[] getPointsFromFeatureVector(FeatureVector features) {
 		// get Points object from all feature vector
 		Points pts[] = new Points[features.getFeatureVector().length];
@@ -228,30 +176,6 @@ public class Operations {
 			pts[j] = new Points(features.getFeatureVector()[j]);
 		}
 		return pts;
-	}
-
-	/**
-	 * 
-	 * @param word
-	 * @return
-	 */
-	public boolean checkWord(String word) {
-		db = new ObjectIODataBase();
-		db.setType("hmm");
-		words = db.readRegistered();
-		for (int i = 0; i < words.length; i++) {
-			if (words[i].equalsIgnoreCase(word)) { return true;// word found
-			}
-		}
-		return false;// word not found
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean checkSelectedPath() {
-		return true;
 	}
 
 	double test0[][] = // user0
@@ -299,5 +223,4 @@ public class Operations {
 			{ 12.0, 82.5, 5.0, 30, 823.0, 11.0, 42.0, 180.0 }, { 12.0, 82.0, 4.0, 30, 813.0, 19.0, 32.5, 182.0 },
 					{ 12.0, 85.5, 5.0, 30, 823.0, 20.0, 42.0, 180.0 }, { 12.0, 83.0, 6.0, 30, 813.0, 18.0, 32.1, 188.0 },
 					{ 12.0, 82.0, 6.0, 30, 813.0, 19.0, 42.0, 180.0 }, { 12.0, 82.7, 5.0, 30, 823.0, 21.0, 42.0, 182.0 } }, };
-	// ///////////////////////////////////////////////////////////////////////////////////
 }
