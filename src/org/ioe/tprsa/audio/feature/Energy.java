@@ -14,17 +14,11 @@ public class Energy {
      */
 	private int samplePerFrame;
 
-	/**
-	 * 
-	 * @param samplePerFrame
-	 */
 	public Energy(int samplePerFrame) {
 		this.samplePerFrame = samplePerFrame;
 	}
 
 	/**
-	 * 
-	 * @param framedSignal
 	 * @return energy of given PCM frame
 	 */
 	public double[] calcEnergy(float[][] framedSignal) {

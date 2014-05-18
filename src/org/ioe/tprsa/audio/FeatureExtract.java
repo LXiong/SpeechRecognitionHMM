@@ -20,8 +20,7 @@ import org.ioe.tprsa.audio.feature.MFCC;
  */
 public class FeatureExtract {
 	private float[][] framedSignal;
-	private int samplePerFrame;
-	private int noOfFrames;
+    private int noOfFrames;
 	/**
 	 * how many mfcc coefficients per frame
 	 */
@@ -51,8 +50,7 @@ public class FeatureExtract {
 	public FeatureExtract(float[][] framedSignal, int samplingRate, int samplePerFrame) {
 		this.framedSignal = framedSignal;
 		this.noOfFrames = framedSignal.length;
-		this.samplePerFrame = samplePerFrame;
-		mfcc = new MFCC(samplePerFrame, samplingRate, numCepstra);
+        mfcc = new MFCC(samplePerFrame, samplingRate, numCepstra);
 		en = new Energy(samplePerFrame);
 		fv = new FeatureVector();
 		mfccFeature = new double[noOfFrames][numCepstra];
@@ -92,15 +90,9 @@ public class FeatureExtract {
 		// energy delta delta
 		deltaDeltaEnergy = delta.performDelta1D(deltaEnergy);
 		for (int i = 0; i < framedSignal.length; i++) {
-			for (int j = 0; j < numCepstra; j++) {
-				featureVector[i][j] = mfccFeature[i][j];
-			}
-			for (int j = numCepstra; j < 2 * numCepstra; j++) {
-				featureVector[i][j] = deltaMfcc[i][j - numCepstra];
-			}
-			for (int j = 2 * numCepstra; j < 3 * numCepstra; j++) {
-				featureVector[i][j] = deltaDeltaMfcc[i][j - 2 * numCepstra];
-			}
+            System.arraycopy(mfccFeature[i], 0, featureVector[i], 0, numCepstra);
+            System.arraycopy(deltaMfcc[i], numCepstra - numCepstra, featureVector[i], numCepstra, 2 * numCepstra - numCepstra);
+            System.arraycopy(deltaDeltaMfcc[i], 2 * numCepstra - 2 * numCepstra, featureVector[i], 2 * numCepstra, 3 * numCepstra - 2 * numCepstra);
 			featureVector[i][3 * numCepstra] = energyVal[i];
 			featureVector[i][3 * numCepstra + 1] = deltaEnergy[i];
 			featureVector[i][3 * numCepstra + 2] = deltaDeltaEnergy[i];

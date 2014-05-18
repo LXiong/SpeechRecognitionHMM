@@ -28,8 +28,6 @@ public class FFT {
 
 	/**
 	 * performs Fast Fourier Transformation<br>
-	 * 
-	 * @param signal
 	 */
 	public void computeFFT(float signal[]) {
 		numPoints = signal.length;

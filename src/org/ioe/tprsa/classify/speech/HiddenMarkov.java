@@ -14,17 +14,11 @@ import org.ioe.tprsa.util.ArrayWriter;
  * <b>called by:</b> volume, train<br>
  * <b>input:</b> sequence of integers<br>
  * <b>output:</b> probability
- * 
- * @author Danny Su
- * 
- * @modified-by Ganesh Tiwari : DB Operations, Initialization of parameters
- *              Corrected last updated on Dec-27,2010
  */
 public class HiddenMarkov {
 	/**
 	 * minimum probability
 	 */
-	// final double MIN_PROBABILITY = 0.00000000001;
 	final double MIN_PROBABILITY = 0.0001;
 	/**
 	 * length of observation sequence
@@ -81,11 +75,7 @@ public class HiddenMarkov {
 	 * Scale Coefficient
 	 */
 	protected double scaleFactor[];
-	/**
-	 * variable for viterbi algorithm
-	 */
-	private int psi[][];
-	/**
+    /**
 	 * best state sequence
 	 */
 	public int q[];
@@ -102,7 +92,8 @@ public class HiddenMarkov {
 	public double viterbi(int testSeq[]) {
 		setObSeq(testSeq);
 		double phi[][] = new double[len_obSeq][num_states];
-		psi = new int[len_obSeq][num_states];
+		/*variable for viterbi algorithm*/
+        int[][] psi = new int[len_obSeq][num_states];
 		q = new int[len_obSeq];
 
 		for (int i = 0; i < num_states; i++) {
@@ -117,7 +108,7 @@ public class HiddenMarkov {
 		for (int t = 1; t < len_obSeq; t++) {
 			for (int j = 0; j < num_states; j++) {
 				double max = phi[t - 1][0] + Math.log(transition[0][j]);
-				double temp = 0;
+				double temp;
 				int index = 0;
 
 				for (int i = 1; i < num_states; i++) {
@@ -133,7 +124,7 @@ public class HiddenMarkov {
 		}
 
 		double max = phi[len_obSeq - 1][0];
-		double temp = 0;
+		double temp;
 		int index = 0;
 		for (int i = 1; i < num_states; i++) {
 			temp = phi[len_obSeq - 1][i];
@@ -426,8 +417,7 @@ public class HiddenMarkov {
 	public HiddenMarkov(String word) {
 		DataBase db = new ObjectIODataBase();
 		db.setType("hmm");
-		HMMModel model = new HMMModel();
-		model = (HMMModel) db.readModel(word);// System.out.println(model.getClass());
+		HMMModel model = (HMMModel) db.readModel(word);// System.out.println(model.getClass());
 		num_obSeq = model.getNum_obSeq();
 		output = model.getOutput();// ArrayWriter.print2DTabbedDoubleArrayToConsole(output);
 		transition = model.getTransition();
@@ -499,9 +489,7 @@ public class HiddenMarkov {
 	 * save HMM model to file<br>
 	 * calls: none<br>
 	 * called by: trainHMM
-	 * 
-	 * @param filepath
-	 *            file location
+	 * @param modelName file location
 	 */
 	public void save(String modelName) {
 		DataBase db = new ObjectIODataBase();

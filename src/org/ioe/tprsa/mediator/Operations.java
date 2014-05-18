@@ -43,16 +43,16 @@ public class Operations {
 		trainTestWavs = new TrainingTestingWaveFiles("train");
 		int totalFrames = 0;
 		wavFiles = trainTestWavs.readWaveFilesList();
-		for (int i = 0; i < wavFiles.length; i++) {
-			for (int j = 0; j < wavFiles[i].length; j++) {
-				System.out.println("Currently :::" + wavFiles[i][j].getAbsoluteFile());
-				FeatureVector feature = extractFeatureFromFile(wavFiles[i][j]);
-				for (int k = 0; k < feature.getNoOfFrames(); k++) {
-					allFeaturesList.add(feature.getFeatureVector()[k]);
-					totalFrames++;//
-				}
-			}
-		}
+        for (File[] wavFile : wavFiles) {
+            for (File aWavFile : wavFile) {
+                System.out.println("Currently :::" + aWavFile.getAbsoluteFile());
+                FeatureVector feature = extractFeatureFromFile(aWavFile);
+                for (int k = 0; k < feature.getNoOfFrames(); k++) {
+                    allFeaturesList.add(feature.getFeatureVector()[k]);
+                    totalFrames++;//
+                }
+            }
+        }
 		System.out.println("total frames  " + totalFrames + "  allFeaturesList.size   " + allFeaturesList.size());
 		// make a single 2d array of all features
 		double allFeatures[][] = new double[totalFrames][FEATUREDIMENSION];

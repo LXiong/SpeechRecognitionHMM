@@ -1,10 +1,3 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.audio.preProcessings;
 
 /**
@@ -15,15 +8,12 @@ package org.ioe.tprsa.audio.preProcessings;
 public class EndPointDetection {
 
 	private float[] originalSignal; // input
-	private float[] silenceRemovedSignal;// output
-	private int samplingRate;
-	private int firstSamples;
+    private int firstSamples;
 	private int samplePerFrame;
 
 	public EndPointDetection(float[] originalSignal, int samplingRate) {
 		this.originalSignal = originalSignal;
-		this.samplingRate = samplingRate;
-		samplePerFrame = this.samplingRate / 1000;
+        samplePerFrame = samplingRate / 1000;
 		firstSamples = samplePerFrame * 200;// according to formula
 	}
 
@@ -40,7 +30,6 @@ public class EndPointDetection {
 		for (int i = 0; i < firstSamples; i++) {
 			sum += originalSignal[i];
 		}
-		// System.err.println("total sum :" + sum);
 		m = sum / firstSamples;// mean
 		sum = 0;// reuse var for S.D.
 
@@ -49,15 +38,9 @@ public class EndPointDetection {
 			sum += Math.pow((originalSignal[i] - m), 2);
 		}
 		sd = Math.sqrt(sum / firstSamples);
-		// System.err.println("summm sum :" + sum);
-		// System.err.println("mew :" + m);
-		// System.err.println("sigma :" + sd);
-
 		// 3. identifying whether one-dimensional Mahalanobis distance function
 		// i.e. |x-u|/s greater than ####3 or not,
 		for (int i = 0; i < originalSignal.length; i++) {
-			// System.out.println("x-u/SD  ="+(Math.abs(originalSignal[i] -u ) /
-			// sd));
 			if ((Math.abs(originalSignal[i] - m) / sd) > 2) {
 				voiced[i] = 1;
 			}
@@ -97,7 +80,7 @@ public class EndPointDetection {
 		}
 
 		// 5. silence removal
-		silenceRemovedSignal = new float[usefulFramesCount * samplePerFrame];
+        float[] silenceRemovedSignal = new float[usefulFramesCount * samplePerFrame];
 		int k = 0;
 		for (int i = 0; i < frameCount; i++) {
 			if (voicedFrame[i] == 1) {

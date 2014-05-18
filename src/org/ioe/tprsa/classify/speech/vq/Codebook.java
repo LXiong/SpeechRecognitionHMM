@@ -1,47 +1,3 @@
-/*
-OC Volume - Java Speech Recognition Engine
-Copyright (c) 2002-2004, OrangeCow organization
-All rights reserved.
-
-Redistribution and use in source and binary forms,
-with or without modification, are permitted provided
-that the following conditions are met:
-
- * Redistributions of source code must retain the
-  above copyright notice, this list of conditions
-  and the following disclaimer.
- * Redistributions in binary form must reproduce the
-  above copyright notice, this list of conditions
-  and the following disclaimer in the documentation
-  and/or other materials provided with the
-  distribution.
- * Neither the name of the OrangeCow organization
-  nor the names of its contributors may be used to
-  endorse or promote products derived from this
-  software without specific prior written
-  permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
-AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
-OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-Contact information:
-Please visit http://ocvolume.sourceforge.net.
- */
-
 package org.ioe.tprsa.classify.speech.vq;
 
 import org.ioe.tprsa.classify.speech.CodeBookDictionary;
@@ -55,11 +11,6 @@ import org.ioe.tprsa.db.ObjectIODataBase;
  * <b>called by:</b> volume, train<br>
  * <b>input:</b> speech signal<br>
  * <b>output:</b> set of centroids, set of indices
- * 
- * @author Danny Su
- * @author Andrei Leonov
- * 
- * @modified-by Ganesh Tiwari : DB Operations last updated on Dec-27,2010
  */
 public class Codebook {
 	/**
@@ -104,8 +55,7 @@ public class Codebook {
 		if (pt.length >= codebook_size) {
 			dimension = pt[0].getDimension();
 			initialize();
-		}
-		else {
+		} else {
 			System.out.println("err: not enough training points");
 		}
 	}
@@ -118,12 +68,9 @@ public class Codebook {
 	public Codebook() {
 		DataBase db = new ObjectIODataBase();
 		db.setType("cbk");
-		CodeBookDictionary cbd = new CodeBookDictionary();
-		cbd = (CodeBookDictionary) db.readModel(null);
+		CodeBookDictionary cbd = (CodeBookDictionary) db.readModel(null);
 		dimension = cbd.getDimension();
 		centroids = cbd.getCent();
-		// System.out.println("Showing parameters");
-		// showParameters();
 	}
 
 	/**
@@ -145,9 +92,9 @@ public class Codebook {
 		centroids[0] = new Centroid(origin);
 
 		// initially, all training points will belong to 1 single cell
-		for (int i = 0; i < pt.length; i++) {
-			centroids[0].add(pt[i], 0);
-		}
+        for (Points aPt : pt) {
+            centroids[0].add(aPt, 0);
+        }
 
 		// calls update to set the initial codevector as the average of all
 		// points
@@ -164,17 +111,17 @@ public class Codebook {
 
 			// Iteration 2: perform K-means algorithm
 			do {
-				for (int i = 0; i < centroids.length; i++) {
-					distortion_before_update += centroids[i].getDistortion();
-					centroids[i].update();
-				}
+                for (Centroid centroid : centroids) {
+                    distortion_before_update += centroid.getDistortion();
+                    centroid.update();
+                }
 
 				// regroup
 				groupPtoC();
 
-				for (int i = 0; i < centroids.length; i++) {
-					distortion_after_update += centroids[i].getDistortion();
-				}
+                for (Centroid centroid : centroids) {
+                    distortion_after_update += centroid.getDistortion();
+                }
 
 			} while (Math.abs(distortion_after_update - distortion_before_update) < MIN_DISTORTION);
 		}
@@ -191,9 +138,9 @@ public class Codebook {
 		CodeBookDictionary cbd = new CodeBookDictionary();
 		// no need to save all the points,
 		// must be removed in objectIO, to reduce the size of file
-		for (int i = 0; i < centroids.length; i++) {
-			centroids[i].pts.removeAllElements();
-		}
+        for (Centroid centroid : centroids) {
+            centroid.pts.removeAllElements();
+        }
 		cbd.setDimension(dimension);
 		cbd.setCent(centroids);
 		db.saveModel(cbd, null);// filepath is not used
@@ -255,7 +202,7 @@ public class Codebook {
 	 * @return index number of the closest Centroid
 	 */
 	private int closestCentroidToPoint(Points pt) {
-		double tmp_dist = 0;
+		double tmp_dist;
 		double lowest_dist = 0; // = getDistance(pt, centroids[0]);
 		int lowest_index = 0;
 
@@ -274,12 +221,11 @@ public class Codebook {
 	 * calls: none<br>
 	 * called by: Codebook
 	 * 
-	 * @param pt
-	 *            Points
+	 * @param c Points
 	 * @return index number of the closest Centroid
 	 */
 	private int closestCentroidToCentroid(Centroid c) {
-		double tmp_dist = 0;
+		double tmp_dist;
 		double lowest_dist = Double.MAX_VALUE;
 		int lowest_index = 0;
 		for (int i = 0; i < centroids.length; i++) {
@@ -304,7 +250,7 @@ public class Codebook {
 	 * @return index of Points
 	 */
 	private int closestPoint(Centroid c1, Centroid c2) {
-		double tmp_dist = 0;
+		double tmp_dist;
 		double lowest_dist = getDistance(c2.getPoint(0), c1);
 		int lowest_index = 0;
 		for (int i = 1; i < c2.getNumPts(); i++) {
@@ -324,25 +270,25 @@ public class Codebook {
 	 */
 	private void groupPtoC() {
 		// find closest Centroid and assign Points to it
-		for (int i = 0; i < pt.length; i++) {
-			int index = closestCentroidToPoint(pt[i]);
-			centroids[index].add(pt[i], getDistance(pt[i], centroids[index]));
-		}
+        for (Points aPt : pt) {
+            int index = closestCentroidToPoint(aPt);
+            centroids[index].add(aPt, getDistance(aPt, centroids[index]));
+        }
 		// make sure that all centroids have at least one Points assigned to it
 		// no cell should be empty or else NaN error will occur due to division
 		// of 0 by 0
-		for (int i = 0; i < centroids.length; i++) {
-			if (centroids[i].getNumPts() == 0) {
-				// find the closest Centroid with more than one points assigned
-				// to it
-				int index = closestCentroidToCentroid(centroids[i]);
-				// find the closest Points in the closest Centroid's cell
-				int closestIndex = closestPoint(centroids[i], centroids[index]);
-				Points closestPt = centroids[index].getPoint(closestIndex);
-				centroids[index].remove(closestPt, getDistance(closestPt, centroids[index]));
-				centroids[i].add(closestPt, getDistance(closestPt, centroids[i]));
-			}
-		}
+        for (Centroid centroid : centroids) {
+            if (centroid.getNumPts() == 0) {
+                // find the closest Centroid with more than one points assigned
+                // to it
+                int index = closestCentroidToCentroid(centroid);
+                // find the closest Points in the closest Centroid's cell
+                int closestIndex = closestPoint(centroid, centroids[index]);
+                Points closestPt = centroids[index].getPoint(closestIndex);
+                centroids[index].remove(closestPt, getDistance(closestPt, centroids[index]));
+                centroid.add(closestPt, getDistance(closestPt, centroid));
+            }
+        }
 	}
 
 	/**
@@ -357,7 +303,7 @@ public class Codebook {
 	 */
 	private double getDistance(Points tPt, Centroid tC) {
 		double distance = 0;
-		double temp = 0;
+		double temp;
 		for (int i = 0; i < dimension; i++) {
 			temp = tPt.getCo(i) - tC.getCo(i);
 			distance += temp * temp;

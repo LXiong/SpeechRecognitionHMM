@@ -1,16 +1,8 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.audio;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -21,22 +13,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * saving and extracting PCM data from wavefile byteArray
- * 
- * @author Ganesh Tiwari
  */
 public class WaveData {
 
 	private byte[] arrFile;
 	private byte[] audioBytes;
 	private float[] audioData;
-	private FileOutputStream fos;
-	private ByteArrayInputStream bis;
-	private AudioInputStream audioInputStream;
+    private AudioInputStream audioInputStream;
 	private AudioFormat format;
 	private double durationSec;
-
-	public WaveData() {
-	}
 
 	public byte[] getAudioBytes() {
 		return audioBytes;
@@ -68,8 +53,7 @@ public class WaveData {
 	}
 
 	public float[] extractAmplitudeFromFileByteArray(byte[] arrFile) {
-		// System.out.println("File :  "+wavFile+""+arrFile.length);
-		bis = new ByteArrayInputStream(arrFile);
+        ByteArrayInputStream bis = new ByteArrayInputStream(arrFile);
 		return extractAmplitudeFromFileByteArrayInputStream(bis);
 	}
 
@@ -78,7 +62,6 @@ public class WaveData {
 	 * channel, littleEndian,
 	 * 
 	 * @return PCM audioData
-	 * @throws Exception
 	 */
 	public float[] extractAmplitudeFromFileByteArrayInputStream(ByteArrayInputStream bis) {
 		try {
@@ -149,19 +132,14 @@ public class WaveData {
 					audioData[i] = audioBytes[i] - 128;
 				}
 			}
-		}// end of if..else
-			// System.out.println("PCM Returned===============" +
-			// audioData.length);
+		}
 		return audioData;
 	}
 
 	/**
 	 * Save to file.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param fileType
-	 *            the file type
+	 * @param name the name
+	 * @param fileType the file type
 	 */
 	public void saveToFile(String name, AudioFileFormat.Type fileType, AudioInputStream audioInputStream) {
 		File myFile = new File(name);
@@ -180,30 +158,6 @@ public class WaveData {
 			String temp = String.format(name + "%d", i++);
 			myFile = new File(temp + ".wav");
 		}
-		try {
-			if (AudioSystem.write(audioInputStream, fileType, myFile) == -1) {
-			}
-		} catch (Exception ex) {
-		}
 		System.out.println(myFile.getAbsolutePath());
-		// JOptionPane.showMessageDialog(null, "File Saved !", "Success",
-		// JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	/**
-	 * saving the file's bytearray
-	 * 
-	 * @param fileName
-	 *            the name of file to save the received byteArray of File
-	 */
-	public void saveFileByteArray(String fileName, byte[] arrFile) {
-		try {
-			fos = new FileOutputStream(fileName);
-			fos.write(arrFile);
-			fos.close();
-		} catch (Exception ex) {
-			System.err.println("Error during saving wave file " + fileName + " to disk" + ex.toString());
-		}
-		System.out.println("WAV Audio data saved to " + fileName);
 	}
 }

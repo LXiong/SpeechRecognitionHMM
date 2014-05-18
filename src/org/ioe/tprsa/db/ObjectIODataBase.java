@@ -51,18 +51,12 @@ public class ObjectIODataBase implements DataBase {
     public Model readModel(String name) {
         Model model = null;
         if (type.equalsIgnoreCase("hmm")) {
-            ObjectIO<HMMModel> oio = new ObjectIO<HMMModel>();
-            model = new HMMModel();
+            ObjectIO<HMMModel> oio = new ObjectIO<>();
             model = oio.readModel( CURRENTFOLDER + "\\" + name + "." + type);
-//            System.out.println("Type " + type);
-//            System.out.println("Read ::::: " + DBROOTFOLDER + "\\" + CURRENTFOLDER + "\\" + name + "." + type);
-            // System.out.println(model);
         }
         if (type.equalsIgnoreCase("cbk")) {
-            ObjectIO<CodeBookDictionary> oio = new ObjectIO<CodeBookDictionary>();
-            model = new CodeBookDictionary();
+            ObjectIO<CodeBookDictionary> oio = new ObjectIO<>();
             model = oio.readModel( CURRENTFOLDER + "\\" + CODEBOOKFILENAME + "." + type);
-//            System.out.println("Read ::::: " + DBROOTFOLDER + "\\" + CURRENTFOLDER + "\\" + CODEBOOKFILENAME + "." + type);
         }
         return model;
     }
@@ -77,13 +71,13 @@ public class ObjectIODataBase implements DataBase {
     @Override
     public void saveModel(Model model, String name) {
         if (type.equalsIgnoreCase("hmm")) {
-            ObjectIO<HMMModel> oio = new ObjectIO<HMMModel>();
+            ObjectIO<HMMModel> oio = new ObjectIO<>();
             oio.setModel((HMMModel) model);
             oio.saveModel(CURRENTFOLDER + "\\" + name
                     + "." + type);
         }
         if (type.equalsIgnoreCase("cbk")) {
-            ObjectIO<CodeBookDictionary> oio = new ObjectIO<CodeBookDictionary>();
+            ObjectIO<CodeBookDictionary> oio = new ObjectIO<>();
             oio.setModel((CodeBookDictionary) model);
             oio.saveModel( CURRENTFOLDER + "\\"
                     + CODEBOOKFILENAME + "." + type);

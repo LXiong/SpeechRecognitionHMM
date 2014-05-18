@@ -2,9 +2,8 @@ package org.ioe.tprsa.util;
 
 /**
  * saves the array to file or console ...... supports various data types
- * @author Ganesh Tiwari
  */
-public class ArrayWriter {
+public final class ArrayWriter {
 	/**
 	 * display @param array 's content to console
 	 * @param array input array

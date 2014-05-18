@@ -9,18 +9,13 @@ package org.ioe.tprsa.audio.feature;
  */
 public class Delta {
 	/**
-	 * @param M
-	 *            regression window size <br>
+	 * @param M regression window size <br>
 	 *            i.e.,number of frames to take into account while taking delta
 	 */
 	int M;
 
-	public Delta() {
-	}
-
 	/**
-	 * @param M
-	 *            length of regression window
+	 * @param M length of regression window
 	 */
 	public void setRegressionWindow(int M) {
 		this.M = M;

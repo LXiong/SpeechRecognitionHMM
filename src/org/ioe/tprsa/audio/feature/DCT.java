@@ -18,7 +18,7 @@ public class DCT {
 	int M;
 
 	/**
-	 * @param len length of array, i.e., number of features
+	 * @param numCepstra length of array, i.e., number of features
 	 * @param M numbe of Mel Filters
 	 */
 	public DCT(int numCepstra, int M) {

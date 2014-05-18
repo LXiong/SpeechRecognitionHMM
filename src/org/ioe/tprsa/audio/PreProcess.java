@@ -1,19 +1,9 @@
-/*
-  Please feel free to use/modify this class. 
-  If you give me credit by keeping this information or
-  by sending me an email before using it or by reporting bugs , i will be happy.
-  Email : gtiwari333@gmail.com,
-  Blog : http://ganeshtiwaridotcomdotnp.blogspot.com/ 
- */
 package org.ioe.tprsa.audio;
 
 import org.ioe.tprsa.audio.preProcessings.EndPointDetection;
 
 /**
  * pre-processing steps
- * 
- * @author Ganesh Tiwari
- * 
  */
 public class PreProcess {
 
@@ -21,7 +11,6 @@ public class PreProcess {
 	float[] afterEndPtDetection;// after endPointDetection
 	public int noOfFrames;// calculated total no of frames
 	int samplePerFrame;// how many samples in one frame
-	int framedArrayLength;// how many samples in framed array
 	public float[][] framedSignal;
 	float[] hammingWindow;
 	EndPointDetection epd;
@@ -30,7 +19,7 @@ public class PreProcess {
 	/**
 	 * constructor, all steps are called frm here
 	 * 
-	 * @param audioData
+	 * @param originalSignal
 	 *            extracted PCM data
 	 * @param samplePerFrame
 	 *            how many samples in one frame,=660 << frameDuration, typically
@@ -44,7 +33,6 @@ public class PreProcess {
 		normalizePCM();
 		epd = new EndPointDetection(this.originalSignal, this.samplingRate);
 		afterEndPtDetection = epd.doEndPointDetection();
-		// ArrayWriter.printFloatArrayToFile(afterEndPtDetection, "endPt.txt");
 		doFraming();
 		doWindowing();
 	}
@@ -56,7 +44,6 @@ public class PreProcess {
 				max = Math.abs(originalSignal[i]);
 			}
 		}
-		// System.out.println("max PCM =  " + max);
 		for (int i = 0; i < originalSignal.length; i++) {
 			originalSignal[i] = originalSignal[i] / max;
 		}
@@ -74,9 +61,7 @@ public class PreProcess {
 		framedSignal = new float[noOfFrames][samplePerFrame];
 		for (int i = 0; i < noOfFrames; i++) {
 			int startIndex = (i * samplePerFrame / 2);
-			for (int j = 0; j < samplePerFrame; j++) {
-				framedSignal[i][j] = afterEndPtDetection[startIndex + j];
-			}
+            System.arraycopy(afterEndPtDetection, startIndex, framedSignal[i], 0, samplePerFrame);
 		}
 	}
 
